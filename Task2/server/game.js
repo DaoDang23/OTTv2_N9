@@ -7,28 +7,36 @@ const BEATS = {
 };
 
 function createInitialBoard() {
+
     return {
 
-        // BLUE
+        // =========================
+        // XANH
+        // =========================
 
         B5: {
             owner: "blue",
             type: "paper"
         },
 
-        D6: {
+        C5: {
             owner: "blue",
             type: "scissors"
+        },
+
+        B4: {
+            owner: "blue",
+            type: "rock"
+        },
+
+        C4: {
+            owner: "blue",
+            type: "paper"
         },
 
         D4: {
             owner: "blue",
             type: "scissors"
-        },
-
-        B3: {
-            owner: "blue",
-            type: "rock"
         },
 
         C3: {
@@ -57,7 +65,9 @@ function createInitialBoard() {
         },
 
 
-        // RED
+        // =========================
+        // ĐỎ
+        // =========================
 
         E8: {
             owner: "red",
@@ -67,6 +77,11 @@ function createInitialBoard() {
         F8: {
             owner: "red",
             type: "rock"
+        },
+
+        E7: {
+            owner: "red",
+            type: "scissors"
         },
 
         F7: {
@@ -102,15 +117,9 @@ function createInitialBoard() {
         H5: {
             owner: "red",
             type: "paper"
-        },
-
-        A1: {
-            owner: "red",
-            type: "scissors"
         }
     };
 }
-
 
 function createInitialState() {
     return {
