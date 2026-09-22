@@ -1,0 +1,13 @@
+{
+    "name": "ottv2-task2",
+    "version": "1.0.0",
+    "description": "Oan Tu Ti v2 multiplayer",
+    "main": "server/server.js",
+    "scripts": {
+        "start": "node server/server.js"
+    },
+    "dependencies": {
+        "express": "^4.21.2",
+        "ws": "^8.18.0"
+    }
+}

@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>OTTv2 - Oẳn tù tì v2</title>
+
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+    <div class="game-container">
+
+        <h1>OẲN TÙ TÌ V2</h1>
+
+        <div class="game-info">
+
+            <div>
+                <strong>Người chơi 1</strong>
+                <span class="blue-text">XANH</span>
+            </div>
+
+            <div>
+                <strong>Lượt:</strong>
+                <span id="turn">XANH</span>
+            </div>
+
+            <div>
+                <strong>Người chơi 2</strong>
+                <span class="red-text">ĐỎ</span>
+            </div>
+
+        </div>
+
+        <div id="message" class="message">
+            Người chơi XANH đi trước.
+        </div>
+
+        <div class="board-wrapper">
+
+            <div class="column-labels">
+                <span>A</span>
+                <span>B</span>
+                <span>C</span>
+                <span>D</span>
+                <span>E</span>
+                <span>F</span>
+                <span>G</span>
+                <span>H</span>
+                <span>I</span>
+            </div>
+
+            <div class="board-area">
+
+                <div class="row-labels">
+                    <span>9</span>
+                    <span>8</span>
+                    <span>7</span>
+                    <span>6</span>
+                    <span>5</span>
+                    <span>4</span>
+                    <span>3</span>
+                    <span>2</span>
+                    <span>1</span>
+                </div>
+
+                <div id="board" class="board"></div>
+
+            </div>
+
+        </div>
+
+        <div class="rules">
+
+            <h2>Luật chơi</h2>
+
+            <p>✊ Đấm thắng ✌ Kéo</p>
+            <p>✌ Kéo thắng ✋ Lá</p>
+            <p>✋ Lá thắng ✊ Đấm</p>
+
+            <p>
+                Quân được đi 1 ô theo 8 hướng.
+            </p>
+
+            <p>
+                Hai quân cùng loại không ăn nhau.
+            </p>
+
+            <p>
+                Đưa quân vào A1 hoặc I9 sẽ thắng.
+            </p>
+
+        </div>
+
+        <button id="restart">
+            CHƠI LẠI
+        </button>
+
+    </div>
+
+    <script src="js/game.js"></script>
+
+</body>
+
+</html>
