@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oẳn Tù Tì v2 - Multiplayer</title>
     <link rel="stylesheet" href="style.css">
-    <!-- Nhúng thư viện playhtml -->
     <script src="https://unpkg.com/playhtml@latest"></script>
 </head>
 <body>
     <div class="container">
         
-        <!-- MÀN HÌNH 1: SẢNH CHỜ (LOBBY) -->
         <div id="lobby-overlay" class="overlay">
             <div class="modal">
                 <h2>🎮 Sảnh chờ OTTv2</h2>
@@ -26,7 +24,6 @@
             </div>
         </div>
 
-        <!-- MÀN HÌNH 2: CHỌN CHẾ ĐỘ (Chỉ dành cho Host/Player 1) -->
         <div id="mode-selection" class="overlay hidden">
             <div class="modal">
                 <h2>Chọn cách bố trí quân</h2>
@@ -38,7 +35,6 @@
             </div>
         </div>
 
-        <!-- MÀN HÌNH 3: WAITING FOR PLAYER 2 -->
         <div id="waiting-overlay" class="overlay hidden">
             <div class="modal">
                 <h2>Đang chờ đối thủ...</h2>
@@ -47,7 +43,6 @@
             </div>
         </div>
 
-        <!-- POP-UP THÔNG BÁO -->
         <div id="notification-overlay" class="overlay hidden">
             <div class="modal">
                 <h3 class="notify-title">Thông báo</h3>
@@ -80,9 +75,14 @@
             </div>
         </div>
 
+        <!-- CẬP NHẬT: Thêm nút Chơi lại và Thoát phòng vào Game Over Panel -->
         <div id="game-over-panel" class="hidden">
             <h2 id="winner-message"></h2>
             <p id="winner-reason"></p>
+            <div class="mode-buttons" style="margin-top: 15px;">
+                <button id="btn-play-again" class="btn btn-blue">CHƠI LẠI</button>
+                <button id="btn-exit-room" class="btn btn-orange">THOÁT PHÒNG</button>
+            </div>
         </div>
         
         <div class="board-wrapper">

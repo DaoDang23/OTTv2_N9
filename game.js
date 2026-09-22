@@ -23,10 +23,14 @@ const UI = {
     btnJoin: document.getElementById('btn-join-room'),
     btnFixed: document.getElementById('btn-fixed'),
     btnRandom: document.getElementById('btn-random'),
-    btnCloseNotify: document.getElementById('btn-close-notify')
+    btnCloseNotify: document.getElementById('btn-close-notify'),
+    
+    // THÊM 2 BIẾN LƯU NÚT BẤM
+    btnPlayAgain: document.getElementById('btn-play-again'),
+    btnExitRoom: document.getElementById('btn-exit-room')
 };
 
-// TRẠNG THÁI GAME CHUNG (Đồng bộ giữa 2 máy)
+// TRẠNG THÁI GAME CHUNG 
 let sharedState = {
     board: [],
     turn: 1,
@@ -42,6 +46,7 @@ let myPlayerId = Math.random().toString(36).substr(2, 9);
 let roomId = "";
 let selectedCell = null;
 let isAnimating = false;
+let currentMode = 'FIXED'; // Lưu lại chế độ đang chơi để biết đường reset
 
 // ==========================================
 // 2. LỚP MẠNG (NETWORK WRAPPER)
@@ -81,10 +86,14 @@ const Network = {
             if (msg.action === 'MOVE_REQUEST') {
                 processMoveRequest(msg.fromR, msg.fromC, msg.toR, msg.toC, msg.playerId);
             }
+            // THÊM: Chủ phòng nhận yêu cầu chơi lại từ Khách
+            if (msg.action === 'REMATCH_REQUEST') {
+                showNotification("Player 2 yêu cầu chơi lại! Ván mới bắt đầu.");
+                hostSetupGame(currentMode);
+            }
         }
         
         if (msg.action === 'STATE_UPDATE') {
-            // FIX: Chủ phòng bỏ qua bản tin echo của chính mình để tránh bị lặp hiệu ứng
             if (myRole === 1) return;
 
             sharedState = msg.state;
@@ -105,7 +114,6 @@ const Network = {
         if (myRole === 1) {
             this.send({ action: 'STATE_UPDATE', state: sharedState, moveEvent: moveEvent });
             
-            // FIX: Chủ phòng tự xử lý hiệu ứng trực tiếp thay vì chờ nhận lại tin nhắn
             if (moveEvent) {
                 playMoveAnimation(moveEvent.from, moveEvent.to, moveEvent.isCapture, () => {
                     renderBoard();
@@ -145,9 +153,32 @@ UI.btnJoin.addEventListener('click', () => {
     UI.lobby.classList.add('hidden');
 });
 
-UI.btnFixed.addEventListener('click', () => hostSetupGame('FIXED'));
-UI.btnRandom.addEventListener('click', () => hostSetupGame('RANDOM'));
+UI.btnFixed.addEventListener('click', () => {
+    currentMode = 'FIXED';
+    hostSetupGame('FIXED');
+});
+UI.btnRandom.addEventListener('click', () => {
+    currentMode = 'RANDOM';
+    hostSetupGame('RANDOM');
+});
 UI.btnCloseNotify.addEventListener('click', () => UI.notify.classList.add('hidden'));
+
+// --- THÊM LOGIC 2 NÚT THOÁT / CHƠI LẠI ---
+UI.btnExitRoom.addEventListener('click', () => {
+    location.reload(); // Tải lại toàn bộ trang web để reset 100%
+});
+
+UI.btnPlayAgain.addEventListener('click', () => {
+    if (myRole === 1) {
+        // Nếu mình là chủ phòng thì setup ván mới luôn
+        hostSetupGame(currentMode);
+    } else {
+        // Nếu là khách, gửi yêu cầu sang cho chủ phòng xử lý
+        Network.send({ action: 'REMATCH_REQUEST' });
+        showNotification("Đã gửi yêu cầu ván mới cho Chủ phòng. Vui lòng chờ...");
+    }
+});
+// ----------------------------------------
 
 function showNotification(msg) {
     UI.notifyMsg.textContent = msg;
@@ -156,13 +187,23 @@ function showNotification(msg) {
 
 function hostSetupGame(mode) {
     UI.modeSelect.classList.add('hidden');
-    UI.waiting.classList.remove('hidden'); 
+    
+    // Chỉ hiển thị "Đang chờ đối thủ" nếu P2 chưa vào
+    if (!sharedState.p2Joined) {
+        UI.waiting.classList.remove('hidden'); 
+    }
+    
+    // Ẩn bảng Game Over khi tạo ván mới
+    UI.gameOver.classList.add('hidden');
+    document.body.classList.remove('game-over');
+    UI.turnInd.classList.remove('hidden');
     
     sharedState.board = [];
     for (let i = 0; i < BOARD_SIZE; i++) sharedState.board[i] = Array(BOARD_SIZE).fill(null);
     sharedState.turn = 1;
     sharedState.gameOver = false;
     sharedState.winner = null;
+    selectedCell = null;
 
     if (mode === 'FIXED') {
         const fixedPositions = [
@@ -192,7 +233,9 @@ function hostSetupGame(mode) {
             if (piece && piece.player === 1) sharedState.board[8 - r][8 - c] = { type: piece.type, player: 2 };
         }
     }
-    renderBoard();
+    
+    // CẬP NHẬT QUAN TRỌNG: Gọi đồng bộ Network ngay lập tức để gửi cho P2 nếu P2 đang ở trong phòng
+    Network.syncState();
 }
 
 // ==========================================
@@ -296,7 +339,6 @@ function handleCellClick(row, col) {
     }
 
     if (myRole === 1) {
-        // FIX: Hủy chọn ô ngay lập tức để tránh lỗi crash lúc vẽ lại bảng
         const fromR = selectedCell.row;
         const fromC = selectedCell.col;
         selectedCell = null; 
@@ -338,8 +380,6 @@ function updateScoreboard() {
 function renderBoard() {
     if (!sharedState.board.length) return;
     UI.board.innerHTML = ''; 
-    
-    // FIX: Bổ sung lại lệnh gọi updateScoreboard để đếm điểm không bị 0
     updateScoreboard(); 
 
     UI.board.appendChild(Object.assign(document.createElement('div'), {className: 'coord-label'}));
@@ -401,7 +441,6 @@ function checkGameOverUI() {
     }
 }
 
-// HIỆU ỨNG BAY QUÂN
 function playMoveAnimation(from, to, isCapture, callback) {
     isAnimating = true;
     const oldCell = document.querySelector(`.cell[data-row="${from.r}"][data-col="${from.c}"]`);
@@ -409,7 +448,6 @@ function playMoveAnimation(from, to, isCapture, callback) {
     
     if(!oldCell || !newCell) { isAnimating = false; return callback(); } 
 
-    // FIX: Ẩn quân thật trên UI ở ô cũ đi để lúc quân dummy bay lên nhìn không bị nhân đôi
     const origPiece = oldCell.querySelector('.piece:not(.moving)');
     if(origPiece) origPiece.style.opacity = '0'; 
 
