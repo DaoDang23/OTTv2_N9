@@ -1,136 +1,125 @@
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    margin: 0;
-    padding: 15px;
-    background-color: #f0f2f5;
-    color: #333;
-    display: flex;
-    justify-content: center;
+    margin: 0; padding: 15px;
+    background-color: #f0f2f5; color: #333;
+    display: flex; justify-content: center;
 }
 
 .container {
-    width: 100%;
-    max-width: 500px; /* Chiều rộng tối đa cho màn hình to */
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+    width: 100%; max-width: 500px; position: relative;
+    display: flex; flex-direction: column; align-items: center;
 }
+
+/* OVERLAY VÀ MODAL DÙNG CHUNG CHO CHỌN CHẾ ĐỘ & THÔNG BÁO */
+.overlay {
+    position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+    background: rgba(0, 0, 0, 0.7); z-index: 100;
+    display: flex; justify-content: center; align-items: center;
+    border-radius: 8px;
+}
+.modal {
+    background: #fff; padding: 30px; border-radius: 12px;
+    text-align: center; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+    max-width: 90%;
+}
+.modal h2 { margin-top: 0; color: #333; }
+.mode-buttons { display: flex; gap: 15px; justify-content: center; margin-top: 25px; }
+
+/* CSS riêng cho pop-up thông báo */
+.notify-title { margin-top: 0; color: #e83e8c; font-size: 22px; }
+.notify-text { margin-bottom: 20px; font-size: 16px; color: #555; line-height: 1.5; }
 
 h1 { margin: 5px 0 15px 0; font-size: 24px; text-align: center; }
 
-/* Nút hiển thị lượt chơi nổi bật hơn */
+.controls { margin-bottom: 15px; }
+.btn {
+    padding: 10px 25px; font-size: 16px; font-weight: bold; cursor: pointer;
+    background-color: #28a745; color: white; border: none; border-radius: 25px;
+    transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.btn:hover { transform: scale(1.05); }
+.btn-blue { background-color: #1877f2; }
+.btn-orange { background-color: #f57c00; }
+
 #turn-indicator { 
-    margin: 0 0 15px 0; 
-    font-size: 18px; 
-    padding: 8px 20px; 
-    border-radius: 20px; 
-    font-weight: bold; 
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin: 0 0 15px 0; font-size: 18px; padding: 8px 20px; 
+    border-radius: 20px; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 .turn-p1 { color: #fff; background-color: #1877f2; }
-.turn-p2 { color: #fff; background-color: #e41e3f; }
+.turn-p2 { color: #fff; background-color: #e83e8c; }
 
-/* Bảng điểm đếm quân */
 .scoreboard {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    margin-bottom: 15px;
-    gap: 10px;
+    display: flex; width: 100%; justify-content: space-between;
+    margin-bottom: 15px; gap: 10px;
 }
 .player-panel {
-    flex: 1;
-    padding: 10px;
-    border-radius: 8px;
-    background: #fff;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    text-align: center;
+    flex: 1; padding: 10px; border-radius: 8px;
+    background: #fff; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center;
 }
 .player-panel h3 { margin: 0 0 10px 0; font-size: 15px; }
 .p1 h3 { color: #1877f2; }
-.p2 h3 { color: #e41e3f; }
+.p2 h3 { color: #e83e8c; }
 .stats { display: flex; justify-content: space-around; font-size: 14px; font-weight: bold; }
 
-/* Panel Game Over */
 #game-over-panel {
-    width: 100%;
-    text-align: center;
-    background: #d4edda;
-    padding: 20px;
-    border: 2px solid #c3e6cb;
-    border-radius: 8px;
-    margin-bottom: 15px;
-    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    width: 100%; text-align: center; background: #d4edda;
+    padding: 20px; border: 2px solid #c3e6cb; border-radius: 8px;
+    margin-bottom: 15px; box-shadow: 0 4px 6px rgba(0,0,0,0.1);
 }
 .hidden { display: none !important; }
 #winner-message { margin: 0 0 5px 0; font-size: 22px; font-weight: bold;}
-#winner-reason { margin: 0 0 15px 0; font-size: 16px; color: #155724; }
-#restart-btn {
-    padding: 10px 25px; font-size: 16px; font-weight: bold; cursor: pointer;
-    background-color: #28a745; color: white; border: none; border-radius: 25px;
-    transition: 0.2s;
-}
-#restart-btn:hover { background-color: #218838; transform: scale(1.05); }
+#winner-reason { margin: 0 0 0 0; font-size: 16px; color: #155724; }
 
-/* Vùng chứa bàn cờ tự động canh vuông (aspect-ratio) */
-.board-wrapper {
-    width: 100%;
-    aspect-ratio: 1 / 1; 
-}
+.board-wrapper { width: 100%; aspect-ratio: 1 / 1; }
 #game-board {
-    width: 100%;
-    height: 100%;
-    display: grid;
-    /* Dùng 1fr để 9 ô tự chia đều không gian, responsive tốt trên mobile */
-    grid-template-columns: repeat(9, 1fr);
-    grid-template-rows: repeat(9, 1fr);
-    border: 3px solid #333;
-    background-color: #fff;
+    width: 100%; height: 100%; display: grid;
+    grid-template-columns: 25px repeat(9, 1fr);
+    grid-template-rows: 25px repeat(9, 1fr);
+    border: 3px solid #333; background-color: #fff;
     box-shadow: 0 8px 16px rgba(0,0,0,0.2);
 }
 
+.coord-label {
+    display: flex; justify-content: center; align-items: center;
+    background-color: #e9ecef; font-weight: bold; font-size: 14px; color: #555;
+    user-select: none;
+}
+
 .cell {
-    border: 1px solid #ddd;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    position: relative; /* Để chứa chấm tròn (valid-move) */
+    border: 1px solid #ddd; display: flex; justify-content: center; align-items: center;
+    cursor: pointer; position: relative;
 }
 .cell.dark { background-color: #e9ecef; }
-.cell.goal-cell { background-color: #ffeeba !important; border: 2px dashed #ffc107; }
+.cell.selected { background-color: #b3d4ff !important; border: 2px solid #1877f2; }
 
-/* Làm nổi bật quân cờ đang chọn rõ ràng hơn */
-.cell.selected {
-    background-color: #b3d4ff !important;
-    border: 2px solid #1877f2;
+/* Màu đích đến riêng biệt cho 2 phe */
+.cell.goal-p1 { 
+    background-color: #dbeafe !important;
+    border: 2px dashed #1877f2; 
+}
+.cell.goal-p2 { 
+    background-color: #fce4ec !important;
+    border: 2px dashed #e83e8c; 
 }
 
-/* THÊM MỚI: Dấu chấm biểu thị ô có thể đi */
 .cell.valid-move::after {
-    content: "";
-    width: 30%;
-    height: 30%;
-    background-color: rgba(40, 167, 69, 0.6);
-    border-radius: 50%;
-    position: absolute;
-    pointer-events: none; /* Không chặn click chuột */
+    content: ""; width: 30%; height: 30%; background-color: rgba(40, 167, 69, 0.6);
+    border-radius: 50%; position: absolute; pointer-events: none;
 }
 
-/* Cỡ chữ quân cờ tự động co giãn theo màn hình */
-.piece {
-    font-size: clamp(20px, 6vw, 32px); 
-    user-select: none;
-    z-index: 2; /* Nằm đè lên dấu chấm valid-move */
+/* Thiết kế quân cờ màu đặc, không viền */
+.piece { 
+    width: 80%; height: 80%; 
+    border-radius: 50%; 
+    display: flex; justify-content: center; align-items: center;
+    font-size: clamp(16px, 4.5vw, 24px); 
+    user-select: none; z-index: 2; 
+    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
-/* Hiệu ứng bóng nổi bật để phân biệt 2 bên */
-.player1 { filter: drop-shadow(0 0 5px #1877f2); }
-.player2 { filter: drop-shadow(0 0 5px #e41e3f); }
+.player1 { background-color: #1877f2; }
+.player2 { background-color: #e83e8c; }
 
-/* Vô hiệu hóa click toàn bàn cờ khi game over */
 .game-over #game-board { opacity: 0.8; cursor: not-allowed; }
 .game-over .cell { pointer-events: none; }
