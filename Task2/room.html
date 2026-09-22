@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>OTTv2 - Game</title>
+
+    <link
+        rel="stylesheet"
+        href="css/style.css"
+    >
+
+</head>
+
+
+<body class="game-page">
+
+    <header class="game-header">
+
+        <div>
+
+            <h1>
+                OẲN TÙ TÌ V2
+            </h1>
+
+            <div id="roomTitle">
+                ROOM
+            </div>
+
+        </div>
+
+
+        <button
+            id="leaveRoomBtn"
+            class="secondary-btn"
+        >
+            ← Rời phòng
+        </button>
+
+    </header>
+
+
+    <main class="game-container">
+
+
+        <section
+            class="game-status-panel"
+        >
+
+            <div
+                class="player-box blue-player"
+            >
+
+                <div class="player-color">
+                    🔵 XANH
+                </div>
+
+                <div id="bluePlayerName">
+                    Chưa có người
+                </div>
+
+            </div>
+
+
+            <div class="turn-box">
+
+                <div id="gameStatus">
+                    Đang kết nối...
+                </div>
+
+                <div id="turnStatus">
+                </div>
+
+            </div>
+
+
+            <div
+                class="player-box red-player"
+            >
+
+                <div class="player-color">
+                    🔴 ĐỎ
+                </div>
+
+                <div id="redPlayerName">
+                    Chưa có người
+                </div>
+
+            </div>
+
+        </section>
+
+
+        <section class="board-section">
+
+            <div
+                id="board"
+                class="board"
+            >
+            </div>
+
+        </section>
+
+
+        <div
+            id="message"
+            class="message"
+        >
+        </div>
+
+
+        <div class="game-controls">
+
+            <button
+                id="resetBtn"
+                class="secondary-btn"
+            >
+                Reset game
+            </button>
+
+        </div>
+
+
+    </main>
+
+
+    <script src="client/player.js"></script>
+    <script src="client/network.js"></script>
+    <script src="client/board.js"></script>
+    <script src="client/game.js"></script>
+
+</body>
+
+</html>
