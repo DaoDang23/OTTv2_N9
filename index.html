@@ -3,15 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oẳn Tù Tì v2</title>
+    <title>Oẳn Tù Tì v2 - Multiplayer</title>
     <link rel="stylesheet" href="style.css">
+    <!-- Nhúng thư viện playhtml -->
+    <script src="https://unpkg.com/playhtml@latest"></script>
 </head>
 <body>
     <div class="container">
-        <!-- MÀN HÌNH CHỌN CHẾ ĐỘ -->
-        <div id="mode-selection" class="overlay">
+        
+        <!-- MÀN HÌNH 1: SẢNH CHỜ (LOBBY) -->
+        <div id="lobby-overlay" class="overlay">
+            <div class="modal">
+                <h2>🎮 Sảnh chờ OTTv2</h2>
+                <div class="room-input-group">
+                    <input type="text" id="room-id-input" placeholder="Nhập mã phòng (VD: ROOM123)" />
+                </div>
+                <div class="mode-buttons">
+                    <button id="btn-create-room" class="btn btn-blue">TẠO PHÒNG (P1)</button>
+                    <button id="btn-join-room" class="btn btn-orange">VÀO PHÒNG (P2)</button>
+                </div>
+                <p id="lobby-status" style="color: red; margin-top: 15px;"></p>
+            </div>
+        </div>
+
+        <!-- MÀN HÌNH 2: CHỌN CHẾ ĐỘ (Chỉ dành cho Host/Player 1) -->
+        <div id="mode-selection" class="overlay hidden">
             <div class="modal">
                 <h2>Chọn cách bố trí quân</h2>
+                <p>Bạn là Chủ phòng (Player 1).</p>
                 <div class="mode-buttons">
                     <button id="btn-fixed" class="btn btn-blue">CỐ ĐỊNH</button>
                     <button id="btn-random" class="btn btn-orange">NGẪU NHIÊN</button>
@@ -19,7 +38,16 @@
             </div>
         </div>
 
-        <!-- THÊM MỚI: POP-UP THÔNG BÁO (THAY CHO ALERT) -->
+        <!-- MÀN HÌNH 3: WAITING FOR PLAYER 2 -->
+        <div id="waiting-overlay" class="overlay hidden">
+            <div class="modal">
+                <h2>Đang chờ đối thủ...</h2>
+                <p>Mã phòng của bạn là: <strong id="display-room-id" style="color:#1877f2; font-size:20px;"></strong></p>
+                <p>Hãy gửi mã này cho Player 2.</p>
+            </div>
+        </div>
+
+        <!-- POP-UP THÔNG BÁO -->
         <div id="notification-overlay" class="overlay hidden">
             <div class="modal">
                 <h3 class="notify-title">Thông báo</h3>
@@ -30,10 +58,7 @@
 
         <h1>Oẳn Tù Tì v2 (OTTv2)</h1>
         
-        <div class="controls">
-            <button id="new-game-btn" class="btn">Ván mới</button>
-        </div>
-
+        <h3 id="role-indicator">Bạn là: Đang chờ...</h3>
         <h2 id="turn-indicator">Lượt hiện tại: Player 1</h2>
         
         <div class="scoreboard">

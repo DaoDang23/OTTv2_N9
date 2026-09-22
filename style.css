@@ -12,10 +12,9 @@ body {
     display: flex; flex-direction: column; align-items: center;
 }
 
-/* OVERLAY VÀ MODAL DÙNG CHUNG CHO CHỌN CHẾ ĐỘ & THÔNG BÁO */
 .overlay {
     position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-    background: rgba(0, 0, 0, 0.7); z-index: 100;
+    background: rgba(0, 0, 0, 0.75); z-index: 100;
     display: flex; justify-content: center; align-items: center;
     border-radius: 8px;
 }
@@ -25,15 +24,16 @@ body {
     max-width: 90%;
 }
 .modal h2 { margin-top: 0; color: #333; }
-.mode-buttons { display: flex; gap: 15px; justify-content: center; margin-top: 25px; }
+.mode-buttons { display: flex; gap: 15px; justify-content: center; margin-top: 25px; flex-wrap: wrap; }
+.room-input-group { margin: 20px 0; }
+#room-id-input { padding: 12px; font-size: 16px; width: 100%; border: 2px solid #ccc; border-radius: 6px; text-align: center; font-weight: bold; }
 
-/* CSS riêng cho pop-up thông báo */
 .notify-title { margin-top: 0; color: #e83e8c; font-size: 22px; }
 .notify-text { margin-bottom: 20px; font-size: 16px; color: #555; line-height: 1.5; }
 
-h1 { margin: 5px 0 15px 0; font-size: 24px; text-align: center; }
+h1 { margin: 5px 0 5px 0; font-size: 24px; text-align: center; }
+#role-indicator { margin: 0 0 15px 0; color: #555; font-size: 16px; }
 
-.controls { margin-bottom: 15px; }
 .btn {
     padding: 10px 25px; font-size: 16px; font-weight: bold; cursor: pointer;
     background-color: #28a745; color: white; border: none; border-radius: 25px;
@@ -83,43 +83,33 @@ h1 { margin: 5px 0 15px 0; font-size: 24px; text-align: center; }
 
 .coord-label {
     display: flex; justify-content: center; align-items: center;
-    background-color: #e9ecef; font-weight: bold; font-size: 14px; color: #555;
-    user-select: none;
+    background-color: #e9ecef; font-weight: bold; font-size: 14px; color: #555; user-select: none;
 }
-
 .cell {
     border: 1px solid #ddd; display: flex; justify-content: center; align-items: center;
     cursor: pointer; position: relative;
 }
 .cell.dark { background-color: #e9ecef; }
 .cell.selected { background-color: #b3d4ff !important; border: 2px solid #1877f2; }
-
-/* Màu đích đến riêng biệt cho 2 phe */
-.cell.goal-p1 { 
-    background-color: #dbeafe !important;
-    border: 2px dashed #1877f2; 
-}
-.cell.goal-p2 { 
-    background-color: #fce4ec !important;
-    border: 2px dashed #e83e8c; 
-}
+.cell.goal-p1 { background-color: #dbeafe !important; border: 2px dashed #1877f2; }
+.cell.goal-p2 { background-color: #fce4ec !important; border: 2px dashed #e83e8c; }
 
 .cell.valid-move::after {
     content: ""; width: 30%; height: 30%; background-color: rgba(40, 167, 69, 0.6);
     border-radius: 50%; position: absolute; pointer-events: none;
 }
 
-/* Thiết kế quân cờ màu đặc, không viền */
 .piece { 
-    width: 80%; height: 80%; 
-    border-radius: 50%; 
+    width: 80%; height: 80%; border-radius: 50%; 
     display: flex; justify-content: center; align-items: center;
     font-size: clamp(16px, 4.5vw, 24px); 
-    user-select: none; z-index: 2; 
-    box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+    user-select: none; z-index: 2; box-shadow: 0 4px 6px rgba(0,0,0,0.2);
 }
 .player1 { background-color: #1877f2; }
 .player2 { background-color: #e83e8c; }
+
+.piece.moving { transition: transform 0.3s ease-in-out; z-index: 10; }
+.piece.capturing { transform: scale(0) rotate(180deg) !important; opacity: 0; transition: all 0.3s ease-in-out; }
 
 .game-over #game-board { opacity: 0.8; cursor: not-allowed; }
 .game-over .cell { pointer-events: none; }
